@@ -7,7 +7,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class user {
+public class User {
 
 	@Id
 	private String username;
@@ -18,7 +18,7 @@ public class user {
 	private List<String> posts;
 	private Date lastlogged;
 	
-	public user(String username, String name, String email, String password, List<String> groups, List<String> posts,
+	public User(String username, String name, String email, String password, List<String> groups, List<String> posts,
 			Date lastlogged) {
 		super();
 		this.username = username;
@@ -30,7 +30,7 @@ public class user {
 		this.lastlogged = lastlogged;
 	}
 	
-	public user() {
+	public User() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -112,7 +112,7 @@ public class user {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		user other = (user) obj;
+		User other = (User) obj;
 		if (email == null) {
 			if (other.email != null)
 				return false;

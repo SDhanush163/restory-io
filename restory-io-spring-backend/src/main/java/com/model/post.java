@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class post {
+public class Post {
 
 	@Id
 	private int postID;
@@ -15,11 +15,11 @@ public class post {
 	private String fileID;
 	private String groupID;
 	
-	public post() {
+	public Post() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public post(int postID, String textBody, String author, Date timeStamp, String fileID, String groupID) {
+	public Post(int postID, String textBody, String author, Date timeStamp, String fileID, String groupID) {
 		super();
 		this.postID = postID;
 		this.textBody = textBody;
@@ -98,7 +98,7 @@ public class post {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		post other = (post) obj;
+		Post other = (Post) obj;
 		if (author == null) {
 			if (other.author != null)
 				return false;
