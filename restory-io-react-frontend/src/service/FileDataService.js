@@ -18,4 +18,4 @@ class FileDataService {
 
 }
  
-export default FileDataService;
+export default new FileDataService();

@@ -34,4 +34,4 @@ class UserDataService {
 
 }
  
-export default UserDataService;
+export default new UserDataService();
