@@ -1,9 +1,17 @@
 package com.dao;
 
+import java.util.List;
+
 import com.model.User;
 
 public interface UserDAO {
 	public boolean addUser(User user);
-	public boolean getUserByUsername(String username);
-	public User getUserByName(String name); 
+	public boolean updateUser(User user);
+	public boolean deleteUser(String username);
+	public boolean isUserExist(String username);
+	public boolean validateUser(String email, String password);
+	
+	public User getUserByUsername(String username);
+	public List<User> getUserByName(String name); 
+	public User getUserByEmail(String email);
 }

@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class File {
 
 	@Id
-	private int fileID;
+	private String fileID;
 	private String altName;
 	private String url;
 	private String postID;
@@ -16,7 +16,7 @@ public class File {
 		// TODO Auto-generated constructor stub
 	}
 
-	public File(int fileID, String altName, String url, String postID) {
+	public File(String fileID, String altName, String url, String postID) {
 		super();
 		this.fileID = fileID;
 		this.altName = altName;
@@ -24,11 +24,11 @@ public class File {
 		this.postID = postID;
 	}
 
-	public int getFileID() {
+	public String getFileID() {
 		return fileID;
 	}
 
-	public void setFileID(int fileID) {
+	public void setFileID(String fileID) {
 		this.fileID = fileID;
 	}
 
@@ -61,7 +61,7 @@ public class File {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((altName == null) ? 0 : altName.hashCode());
-		result = prime * result + fileID;
+		result = prime * result + ((fileID == null) ? 0 : fileID.hashCode());
 		result = prime * result + ((postID == null) ? 0 : postID.hashCode());
 		result = prime * result + ((url == null) ? 0 : url.hashCode());
 		return result;
@@ -81,7 +81,10 @@ public class File {
 				return false;
 		} else if (!altName.equals(other.altName))
 			return false;
-		if (fileID != other.fileID)
+		if (fileID == null) {
+			if (other.fileID != null)
+				return false;
+		} else if (!fileID.equals(other.fileID))
 			return false;
 		if (postID == null) {
 			if (other.postID != null)
