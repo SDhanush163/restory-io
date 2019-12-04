@@ -35,6 +35,15 @@ public class Group {
 		this.pendingUsers = pendingUsers;
 	}
 
+	public Group(String groupID, String groupName, String groupDescription, String admin, boolean privacy) {
+		super();
+		this.groupID = groupID;
+		this.groupName = groupName;
+		this.groupDescription = groupDescription;
+		this.admin = admin;
+		this.privacy = privacy;
+	}
+
 	public String getGroupID() {
 		return groupID;
 	}
