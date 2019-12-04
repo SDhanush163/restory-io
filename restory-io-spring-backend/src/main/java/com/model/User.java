@@ -18,6 +18,8 @@ public class User {
 	private List<String> posts;
 	private Date lastlogged;
 	
+	
+	
 	public User(String username, String name, String email, String password, List<String> groups, List<String> posts,
 			Date lastlogged) {
 		super();
@@ -28,6 +30,24 @@ public class User {
 		this.groups = groups;
 		this.posts = posts;
 		this.lastlogged = lastlogged;
+	}
+
+	public User(String username, String name, String email, String password, List<String> groups, List<String> posts) {
+		super();
+		this.username = username;
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.groups = groups;
+		this.posts = posts;
+	}
+	
+	public User(String username, String name, String email, String password) {
+		super();
+		this.username = username;
+		this.name = name;
+		this.email = email;
+		this.password = password;
 	}
 	
 	public User() {
