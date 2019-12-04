@@ -29,6 +29,15 @@ public class Post {
 		this.groupID = groupID;
 	}
 
+	public Post(int postID, String textBody, String author, String fileID, String groupID) {
+		super();
+		this.postID = postID;
+		this.textBody = textBody;
+		this.author = author;
+		this.fileID = fileID;
+		this.groupID = groupID;
+	}
+
 	public int getPostID() {
 		return postID;
 	}
