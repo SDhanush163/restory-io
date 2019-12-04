@@ -75,7 +75,7 @@ public class UserController {
 			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 		}
 		else {
-			return new ResponseEntity<Boolean>(false, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 		}
 	}
 	

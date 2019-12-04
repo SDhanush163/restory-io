@@ -17,6 +17,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import remy from '../restory.jpeg'
 import { FormHelperText } from '@material-ui/core';
+import UserDataService from '../service/UserDataService';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -62,10 +63,24 @@ export default function SignIn() {
   const handleMouseDownPassword = event => {
     event.preventDefault();
   };
-  const setCurrentEmail = () => {
+  const setCurrentEmail = (event) => {
+    event.preventDefault()
     var email=document.getElementById("email").value;
-    localStorage.setItem("emailId",email);
-    window.history.pushState({urlPath:'/home'},"",'/home')
+    
+    var password = document.getElementById("password").value;
+    UserDataService.validateUser(email,password).then(
+      response => {
+        if(response.data) {
+          localStorage.setItem("emailId",email);
+         //this.context.router.push("/home")
+          window.history.pushState({urlPath:'/home'},"",'/home')
+          window.location.reload()
+        }
+        else {
+          alert("Invalid Email or Password")
+        }
+      }
+    )
   };
   const setEmail = () => {
     if(localStorage.emailId){
@@ -94,7 +109,7 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form}  method="POST">
+        <form className={classes.form} method="POST">
           <TextField
             variant="outlined"
             margin="normal"

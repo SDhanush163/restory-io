@@ -16,6 +16,8 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import IconButton from '@material-ui/core/IconButton';
 import remy from '../restory.jpeg'
+import UserDataService from '../service/UserDataService'
+import { FormHelperText } from '@material-ui/core';
 
 function Copyright() {
   return (
@@ -64,20 +66,21 @@ export default function SignUp(props) {
   };
   let emsgFirst=" ";let emsgl="";let emsgId=" ";let emsgP=" "; let emsgCP=" ";
   const validate = (values) => {
-    
+    var pattern =new RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/);
+    var namePattern= new RegExp("^[a-zA-Z]*$");
     if(values.firstName.length==0){
       emsgFirst="Please enter a valid First Name"
     }
-    else if(!values.firstName.matches("^[a-zA-Z]*$")){
+    else if(!namePattern.test(values.firstName)){
       emsgFirst="Please enter only alphabets"
     }
     if(values.lname.length==0){
       emsgl="Please enter a valid Last Name"
     }
-    else if(!values.lName.matches("^[a-zA-Z]*$")){
+    else if(!namePattern.test(values.ltName)){
       emsgl="Please enter only alphabets"
     }
-    if(!values.email.matches("/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/")){
+    if(!pattern.test(values.email)){
       emsgId="Please enter a valid emailID"
     }
     if(values.password == ""){
@@ -90,8 +93,24 @@ export default function SignUp(props) {
       emsgCP = "Password and confirm password do not match"
     }
   };
-  const goToLogin = ()  => {
+  const goToLogin = (event)  => {
+    event.preventDefault();
+    let name = document.getElementById("firstName").value + " " + document.getElementById("lastName").value
+    let email = document.getElementById("email").value
+    let password = document.getElementById("password").value
+    let username = document.getElementById("firstName").value.replace(/[aeiou]/gi, "")
+
+    var user = {
+      username : username,
+      name : name,
+      email : email,
+      password : password
+    }
+
+    UserDataService.addUser(user)
     window.history.pushState({urlPath:'/'},"",'/')
+    window.location.reload()
+
   }
   return (
     <Container component="main" maxWidth="xs">
@@ -102,7 +121,7 @@ export default function SignUp(props) {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} method="POST">
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -110,6 +129,7 @@ export default function SignUp(props) {
                 name="firstName"
                 variant="outlined"
                 required
+                hidden={true}
                 fullWidth
                 id="firstName"
                 label="First Name"
@@ -135,6 +155,7 @@ export default function SignUp(props) {
                 variant="outlined"
                 required
                 fullWidth
+                hidden={true}
                 id="email"
                 label="Email Address"
                 name="email"
@@ -180,6 +201,7 @@ export default function SignUp(props) {
                 autoComplete="current-password"
                 helperText={emsgCP}
               />
+              <FormHelperText helperText={emsgCP}/>
             </Grid>
             <Grid item xs={12}>
               <FormControlLabel

@@ -4,7 +4,7 @@ import UserDataService from '../service/UserDataService'
 class LandingPage extends Component {
     constructor(props) {
         super(props);
-        let emailID = JSON.parse(localStorage.getItem('emailId'))
+        let emailID = localStorage.getItem('emailId')
         this.state = { 
             email : emailID,
             user : '',
@@ -27,7 +27,7 @@ class LandingPage extends Component {
     render() { 
         return ( 
             <React.Fragment>
-                
+                <h1>Home</h1>
             </React.Fragment>
          );
     }
