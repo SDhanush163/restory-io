@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function SignUp() {
+export default function SignUp(props) {
   const classes = useStyles();
   const [values, setValues] = React.useState({
     password: '',
@@ -62,6 +62,37 @@ export default function SignUp() {
   const handleMouseDownPassword = event => {
     event.preventDefault();
   };
+  let emsgFirst=" ";let emsgl="";let emsgId=" ";let emsgP=" "; let emsgCP=" ";
+  const validate = (values) => {
+    
+    if(values.firstName.length==0){
+      emsgFirst="Please enter a valid First Name"
+    }
+    else if(!values.firstName.matches("^[a-zA-Z]*$")){
+      emsgFirst="Please enter only alphabets"
+    }
+    if(values.lname.length==0){
+      emsgl="Please enter a valid Last Name"
+    }
+    else if(!values.lName.matches("^[a-zA-Z]*$")){
+      emsgl="Please enter only alphabets"
+    }
+    if(!values.email.matches("/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/")){
+      emsgId="Please enter a valid emailID"
+    }
+    if(values.password == ""){
+      emsgP="Please enter password"
+    }
+    else if(values.password.length >12){
+      emsgP="Password cannot characters more than 12"
+    }
+    if(values.password != values.confirmPassword){
+      emsgCP = "Password and confirm password do not match"
+    }
+  };
+  const goToLogin = ()  => {
+    window.history.pushState({urlPath:'/'},"",'/')
+  }
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -83,6 +114,7 @@ export default function SignUp() {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                helperText={emsgFirst}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -94,7 +126,9 @@ export default function SignUp() {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
+                helperText={emsgl}
               />
+              
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -105,6 +139,7 @@ export default function SignUp() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                helperText={emsgId}
               />
             </Grid>
             <Grid item xs={12}>
@@ -117,6 +152,7 @@ export default function SignUp() {
                 type={values.showPassword ? 'text' : 'password'}
                 id="password"
                 autoComplete="current-password"
+                helperText={emsgP}
                 InputProps={{
                   endAdornment:(
                     <InputAdornment position="end">
@@ -137,11 +173,12 @@ export default function SignUp() {
                 variant="outlined"
                 required
                 fullWidth
-                name="password"
+                name="confirmPassword"
                 label="Confirm Password"
                 type="password"
-                id="password"
+                id="confirmPassword"
                 autoComplete="current-password"
+                helperText={emsgCP}
               />
             </Grid>
             <Grid item xs={12}>
@@ -157,6 +194,7 @@ export default function SignUp() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={props => goToLogin(props)}
           >
             Sign Up
           </Button>

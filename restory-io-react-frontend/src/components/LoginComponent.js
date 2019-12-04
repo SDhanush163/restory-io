@@ -16,6 +16,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import remy from '../restory.jpeg'
+import { FormHelperText } from '@material-ui/core';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -61,8 +62,31 @@ export default function SignIn() {
   const handleMouseDownPassword = event => {
     event.preventDefault();
   };
+  const setCurrentEmail = () => {
+    var email=document.getElementById("email").value;
+    localStorage.setItem("emailId",email);
+    window.history.pushState({urlPath:'/home'},"",'/home')
+  };
+  const setEmail = () => {
+    if(localStorage.emailId){
+      document.getElementById("email").value=localStorage["emailId"];
+    };
+  };
+  let emsgId=" ";
+  let emsgP =" ";
+  const validatePassword = (values) => {
+    var pattern=new RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/);
+    if(values.password == "" )  {
+      emsgId="Password cannot be empty"
+    }  
+    if(!pattern.test(values.email)){
+      emsgP="Enter a valid email Id"
+    }
+    
+  };
+
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" onLoad={setEmail}>
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar alt="Remy Sharp" className={classes.avatar} srcSet ={remy} >
@@ -70,7 +94,7 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form}  method="POST">
           <TextField
             variant="outlined"
             margin="normal"
@@ -81,17 +105,23 @@ export default function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
+            helperText={emsgId}
+            onChange={validatePassword}
           />
+          <FormHelperText/>
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
+            maxLength={12}
             name="password"
             label="Password"
             type={values.showPassword ? 'text' : 'password'}
             id="password"
             autoComplete="current-password"
+            helperText={emsgP}
+            onChange={validatePassword}
             InputProps={{
             endAdornment:(
               <InputAdornment position="end">
@@ -106,6 +136,7 @@ export default function SignIn() {
               </InputAdornment>),
             }}
           />
+          <FormHelperText/>
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
@@ -116,6 +147,8 @@ export default function SignIn() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={setCurrentEmail}
+            onFocus={validatePassword}
           >
             Sign In
           </Button>
