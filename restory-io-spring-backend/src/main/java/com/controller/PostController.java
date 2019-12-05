@@ -31,22 +31,26 @@ public class PostController {
 		
 		return new ResponseEntity<Post>(post,HttpStatus.OK);
 	}
+	
 	@GetMapping
 	public ResponseEntity<List<Post>> getAllPosts(){
 		System.out.println("Fetching all products ");
 		List<Post> allProducts=postService.getAllPost();
 		return new ResponseEntity<List<Post>>(allProducts,HttpStatus.OK);
 	}
+	
 	@PutMapping()
 	public ResponseEntity<Post> updatePost(@RequestBody Post post){
 		postService.updateText(post);
 		return new ResponseEntity<Post>(post,HttpStatus.OK);		
 	}
+	
 	@DeleteMapping("/{postId}")
 	public ResponseEntity<String> deletePost(@PathVariable("postId")int postId){
 		postService.deletePost(postId);
 		return new ResponseEntity<String>("Post Deleted",HttpStatus.OK);
 	}
+	
 	@PostMapping()
 	public ResponseEntity<String> savePost(@RequestBody Post post){
 		postService.addPost(post);

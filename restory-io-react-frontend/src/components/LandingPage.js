@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import UserDataService from '../service/UserDataService'
+import UserCard from './Material/UserCard';
+import PostCard from './Material/PostCard';
 
 class LandingPage extends Component {
     constructor(props) {
@@ -8,26 +10,41 @@ class LandingPage extends Component {
         this.state = { 
             email : emailID,
             user : '',
-            status : ''
+            status : '',
+            profileImage : '../Assets/Images/defaultProfile.jpg'
          }
     }
 
     componentWillMount() {
         UserDataService.getUserbyEmail(this.state.email).then(
             response => {
-                console.log(response)
-                // this.setState({
-                //     user : response.data,
-                //     status : response.status
-                // })
+                console.log(response.data)
+                this.setState({
+                    user : response.data,
+                    status : response.status
+                })
             } 
         )
     }
     
     render() { 
+        let {user, profileImage} = this.state
         return ( 
             <React.Fragment>
-                <h1>Home</h1>
+                <div className="container">
+                    <div className="row">
+                        <div className="col-3">
+                            <div style={{position: "fixed", top: 0, left: "15%"}}>
+                                <UserCard name={user.name}/><br/>
+                            </div>
+                        </div>
+                        <div className="col-1"></div>
+                        <div className="col-8">
+                            <PostCard /><br/>
+                            <PostCard />
+                        </div>
+                    </div>
+                </div>
             </React.Fragment>
          );
     }
