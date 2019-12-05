@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const GROUP_API_URL = "http://localhost:8000/group"
 
-class GroupDataService extends Component {
+class GroupDataService {
     
     addGroup(group) {
         return axios.post(`${GROUP_API_URL}`, group)

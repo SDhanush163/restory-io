@@ -12,7 +12,7 @@ import PersonIcon from '@material-ui/icons/Person';
 
 const useStyles = makeStyles({
   card: {
-    maxWidth: "50%",
+    maxWidth: "100%",
   },
   buttonwidth: {
     width: "100%",

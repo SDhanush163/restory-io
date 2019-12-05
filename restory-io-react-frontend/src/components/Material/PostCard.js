@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -28,8 +28,9 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: red[500]
   }
 }));
+ 
 
-export default function PostCard() {
+export default function PostCard(props) {
   const classes = useStyles();
 
   return (
@@ -40,21 +41,20 @@ export default function PostCard() {
             R
           </Avatar>
         }
-        title="USER NAME"
-        subheader="GROUP NAME"
+        title={props.username}
+        subheader={props.groupname}
       />
       <CardMedia
         className={classes.media}
-        height="200"
-        image="https://www.fujifilm.com/products/digital_cameras/x/fujifilm_x_t3/sample_images/img/index/ff_x_t3_002.JPG"
-        title="Paella dish"
+        height="100"
+        image={props.imgUrl}
+        title={props.altText}
       />
+
+
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempor posuere magna, 
-        vitae accumsan nisi tempor at. Maecenas nisl nibh, malesuada sed ligula quis, 
-        aliquet lacinia lacus. Ut massa felis, pretium quis pharetra sed, egestas eu dolor. 
-        Donec laoreet facilisis massa vitae volutpat.
+        {props.textBody}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
