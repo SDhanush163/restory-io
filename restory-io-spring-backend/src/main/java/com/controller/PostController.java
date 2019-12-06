@@ -25,7 +25,7 @@ public class PostController {
 	@Autowired
 	PostService postService;
 	@GetMapping("/{postId}")
-	public ResponseEntity<Post> getPost(@PathVariable("postId")int postId){
+	public ResponseEntity<Post> getPost(@PathVariable("postId")String postId){
 		Post post = new Post();
 		post=postService.getPost(postId);
 		
@@ -46,7 +46,7 @@ public class PostController {
 	}
 	
 	@DeleteMapping("/{postId}")
-	public ResponseEntity<String> deletePost(@PathVariable("postId")int postId){
+	public ResponseEntity<String> deletePost(@PathVariable("postId")String postId){
 		postService.deletePost(postId);
 		return new ResponseEntity<String>("Post Deleted",HttpStatus.OK);
 	}

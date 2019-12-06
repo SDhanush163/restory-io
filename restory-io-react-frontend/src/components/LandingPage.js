@@ -14,8 +14,8 @@ import Button from '@material-ui/core/Button';
 import PublishIcon from '@material-ui/icons/Publish';
 import SendIcon from '@material-ui/icons/Send';
 import Select from '@material-ui/core/Select';
-import storage from '../Firebase/index'
-
+import storage from './Firebase/index'
+import SidebarComponent from './SidebarComponent' 
 
 class LandingPage extends Component {
     constructor(props) {
@@ -26,8 +26,11 @@ class LandingPage extends Component {
             fileName : 'Choose a file ...',
             email : emailID,
             user : '',
+            groupsRender : [],
+            postsRender : [],
+            cardsRender : [],
             status : '',
-            imagePath: '',
+            image: null,
             url: "",
         }
     }
@@ -52,12 +55,47 @@ class LandingPage extends Component {
                     user : response.data,
                     status : response.status
                 })
-            } 
-        )
+                this.renderPosts()
+                }
+            )
     }
 
-    uploadToFirebase = () => {
-        const { image } = this.state;
+    renderPosts = () => {
+        for(const [i, val] of this.state.user.groups.entries()) {
+            GroupDataService.getGroupByGroupID(val).then(res => {
+                let groups = res.data
+                this.setState({groupsRender : [...this.state.groupsRender, res.data]})
+                for(const [i, val] of this.state.groupsRender.entries()) {
+                    for(const [j, val] of val.posts.entries()) {
+                        PostDataService.getPost(val).then(res => {
+                            let postsToBeRendered = res.data 
+                            
+                            let postBeingRendered = {
+                                user : this.state.user.name,
+                                group : groups.groupName,
+                                text : postsToBeRendered.textBody
+                            }
+                            this.setState({
+                                postsRender : [...this.state.postsRender, res.data],
+                                cardsRender : [...this.state.cardsRender, postBeingRendered]
+                            })
+                            
+                        })
+                    }
+                }
+            })
+        }
+    }
+
+    handleUpload = e => {
+        let { image } = this.state;
+        image = e.target.files[0];
+        this.setState(() => ({ image }));
+        this.setState({ 
+            fileName: e.target.files[0].name,
+         });
+         
+         console.log(image)
           const uploadTask = storage.ref(`images/${image.name}`).put(image);
           uploadTask.on(
             "state_changed",
@@ -70,39 +108,53 @@ class LandingPage extends Component {
                 .child(image.name)
                 .getDownloadURL()
                 .then(url => {
-                  this.setState({url : url})
+                  this.setState({ url })
+                  console.log({url});
                 });
+                
             });
-
-    }
-
-    handleUpload = e => {
-        this.setState({ 
-            fileName: e.target.files[0].name,
-            image : "C:/Users/ds84/Desktop/Restory.io/SampleImages" + e.target.files[0].name
-         });
-         this.uploadToFirebase()
         }
 
     handlePostSubmit = (e) => {
-        e.preventDefault()
+        // e.preventDefault()
+        let {user} = this.state
         let id = this.guid()
         let textbody = document.getElementById("textbody").value
         let timestamp = new Date()
 
         let fileID = this.guid()
-        
+
         let post = {
             postID : id,
             textBody : textbody,
-            author : this.state.username,
+            author : this.state.user.username,
             timeStamp : timestamp,
             groupID : this.state.groupID,
             fileID : fileID
         }
+        console.log(post)
+        GroupDataService.getGroupByGroupID(post.groupID).then(res => {
+            let group = res.data
+            
+            group.posts.push(id)
+            GroupDataService.updateGroup(group)
+        })
+
+        if(user.posts == undefined) {
+            console.log("Posts undefined")
+            user.posts = [id]
+        }
+        else{
+            user.posts.push(id)
+        }
+        UserDataService.updateUser(user)
+        PostDataService.addPost(post)
+
+        // PostDataService.addPost
     }
-    
+
     handleGroupChange = e => {
+        console.log(e.target.value)
         this.setState({
             groupID : e.target.value
         })
@@ -111,33 +163,25 @@ class LandingPage extends Component {
     render() { 
         let {fileName, user} = this.state
         const groupItems = []
-        const postItems = []
 
         if(user.groups != null) {
-        for (const [i, value] of user.groups.entries()) {
-
-            GroupDataService.getGroupByGroupID(value).then(res => {
-                let group = res.data
-                groupItems.push(<option key={i} value={group.groupID}>{group.groupName}</option>)
-            })
-            
-        }}
-
-        if(user.posts != null) {
-        for (const [index, val] of user.groups.posts.entries()) {
-            let post = PostDataService.getPost(val)
-            let file = FileDataService.getFile(post.fileID)
-            let group = GroupDataService.getGroupByGroupID(post.groupID)
-            postItems.push(<PostCard username={user.name} groupname={group.groupName} imgUrl={file.url} altText={file.altText} textBody={post.textBody}/>)
-        }}
- 
+            for (const [i, value] of user.groups.entries()) {
+                GroupDataService.getGroupByGroupID(value).then(res => {
+                    let group = res.data
+                    groupItems.push(<option key={i} value={group.groupID}>{group.groupName}</option>)
+            })}}
+        
+            // console.log(groupItems)
         return ( 
             <React.Fragment>
                 <div>
 
                     <div className="row">
-                        <div className="col-5 offset-3">
-                            
+                        <div className="col-4">
+                            <SidebarComponent />
+                        </div>
+                        <div className="col-5">
+
                             <div style={{position: "sticky", top: 0, backgroundColor : "white", zIndex : 1}}>
                                 <Card>
                                     {/* <h4 style={{marginLeft : "10px"}}>Create Post</h4> */}
@@ -159,9 +203,9 @@ class LandingPage extends Component {
                                           }}
                                         />
                                         <label htmlFor="groupName">Group</label>
-                                         <Select
+                                        <Select
                                         native
-                                        onChange={this.handleGroupChange}
+                                        onBlur={this.handleGroupChange}
                                         inputProps={{
                                             name: 'group',
                                             id: 'groupName',
@@ -181,7 +225,9 @@ class LandingPage extends Component {
                                     </CardContent>
                                 </Card>
                             </div><br/>
-                            {postItems}
+                            {this.state.cardsRender.map((val, i) => (
+                                <div><PostCard username={val.user} groupname={val.group} textBody={val.text} imgUrl={this.state.url} /><br/> </div>
+                            ))}
                         </div>
                         <div className="col-1"></div>
                         <div className="col-2">

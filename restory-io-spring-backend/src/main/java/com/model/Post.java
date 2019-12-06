@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Post {
 
 	@Id
-	private int postID;
+	private String postID;
 	private String textBody;
 	private String author;
 	private Date timeStamp;
@@ -19,7 +19,7 @@ public class Post {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Post(int postID, String textBody, String author, Date timeStamp, String fileID, String groupID) {
+	public Post(String postID, String textBody, String author, Date timeStamp, String fileID, String groupID) {
 		super();
 		this.postID = postID;
 		this.textBody = textBody;
@@ -29,7 +29,7 @@ public class Post {
 		this.groupID = groupID;
 	}
 
-	public Post(int postID, String textBody, String author, String fileID, String groupID) {
+	public Post(String postID, String textBody, String author, String fileID, String groupID) {
 		super();
 		this.postID = postID;
 		this.textBody = textBody;
@@ -38,11 +38,11 @@ public class Post {
 		this.groupID = groupID;
 	}
 
-	public int getPostID() {
+	public String getPostID() {
 		return postID;
 	}
 
-	public void setPostID(int postID) {
+	public void setPostID(String postID) {
 		this.postID = postID;
 	}
 
@@ -86,6 +86,7 @@ public class Post {
 		this.groupID = groupID;
 	}
 
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -93,7 +94,7 @@ public class Post {
 		result = prime * result + ((author == null) ? 0 : author.hashCode());
 		result = prime * result + ((fileID == null) ? 0 : fileID.hashCode());
 		result = prime * result + ((groupID == null) ? 0 : groupID.hashCode());
-		result = prime * result + postID;
+		result = prime * result + ((postID == null) ? 0 : postID.hashCode());
 		result = prime * result + ((textBody == null) ? 0 : textBody.hashCode());
 		result = prime * result + ((timeStamp == null) ? 0 : timeStamp.hashCode());
 		return result;
@@ -123,7 +124,10 @@ public class Post {
 				return false;
 		} else if (!groupID.equals(other.groupID))
 			return false;
-		if (postID != other.postID)
+		if (postID == null) {
+			if (other.postID != null)
+				return false;
+		} else if (!postID.equals(other.postID))
 			return false;
 		if (textBody == null) {
 			if (other.textBody != null)
