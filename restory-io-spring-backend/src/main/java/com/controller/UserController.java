@@ -108,7 +108,7 @@ public class UserController {
 	public ResponseEntity<User> getUserByEmail(@PathVariable("email")String email) {
 		User user = userService.getUserByEmail(email);
 		if(user == null) {
-			System.out.println(email + " found");
+			System.out.println(email + " not found");
 			return new ResponseEntity<User>(HttpStatus.NO_CONTENT); 
 			} 
 		else

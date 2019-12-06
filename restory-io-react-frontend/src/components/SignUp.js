@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -17,8 +17,6 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import IconButton from '@material-ui/core/IconButton';
 import remy from '../restory.jpeg'
 import UserDataService from '../service/UserDataService'
-import { FormHelperText } from '@material-ui/core';
-
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -31,7 +29,10 @@ function Copyright() {
     </Typography>
   );
 }
-
+function useForceUpdate(){
+  const [v, setValue] = useState(0); 
+    return () => setValue(v => ++v);
+}
 const useStyles = makeStyles(theme => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -42,6 +43,7 @@ const useStyles = makeStyles(theme => ({
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
+    width : 50,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -57,6 +59,11 @@ export default function SignUp(props) {
   const [values, setValues] = React.useState({
     password: '',
     showPassword: false,
+    emsgFirst:false,
+    emsgl:false,
+    emsgId:false,
+    emsgP:false,
+    emsgCP:false
   });
   const handleClickShowPassword = () => {
     setValues({ ...values, showPassword: !values.showPassword });
@@ -64,35 +71,77 @@ export default function SignUp(props) {
   const handleMouseDownPassword = event => {
     event.preventDefault();
   };
-  let emsgFirst=" ";let emsgl="";let emsgId=" ";let emsgP=" "; let emsgCP=" ";
-  const validate = (values) => {
-    var pattern =new RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/);
-    var namePattern= new RegExp("^[a-zA-Z]*$");
-    if(values.firstName.length==0){
-      emsgFirst="Please enter a valid First Name"
+  const update = useForceUpdate();
+  var namePattern= /^[a-zA-Z]*$/;
+  const validateFirstName = () => {
+    let firstName =document.getElementById("firstName").value;
+    if(firstName.length==0){
+      values.emsgFirst=true
+      update()
     }
-    else if(!namePattern.test(values.firstName)){
-      emsgFirst="Please enter only alphabets"
+    else if(!namePattern.test(firstName)){
+      values.emsgFirst=true
+      update()
     }
-    if(values.lname.length==0){
-      emsgl="Please enter a valid Last Name"
+    else{
+      values.emsgFirst=false
+      update()
     }
-    else if(!namePattern.test(values.ltName)){
-      emsgl="Please enter only alphabets"
+  }
+  const validateLastName = () =>{
+    let lname =document.getElementById("lastName").value;
+    if(lname.length==0){
+      values.emsgl=true
+      update()
     }
-    if(!pattern.test(values.email)){
-      emsgId="Please enter a valid emailID"
+    else if(!namePattern.test(lname)){
+      values.emsgl=true
+      update()
     }
-    if(values.password == ""){
-      emsgP="Please enter password"
-    }
-    else if(values.password.length >12){
-      emsgP="Password cannot characters more than 12"
-    }
-    if(values.password != values.confirmPassword){
-      emsgCP = "Password and confirm password do not match"
-    }
+    else{
+      values.emsgl=false
+      update()
+    } 
   };
+  
+  const validateEmail = () =>{
+    let email = document.getElementById("email").value;
+    var pattern =/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if(!pattern.test(email)){
+      values.emsgId=true
+      update()
+    }
+    else{
+      values.emsgId=false
+      update()
+    }
+  }
+  const validatePassword =()=>{
+    let password = document.getElementById("password").value;
+    let confirmPassword =document.getElementById("confirmPassword").value;
+    if(password.length <6 || password.length>12 ){
+      values.emsgP=true;
+      update()
+    }
+    else if(password !== confirmPassword){
+      values.emsgCP = true
+      update()
+    }
+    else{
+      values.emsgCP = false
+      values.emsgP=false;
+      update()
+    }
+  }
+  const validateEmailBack= () =>{
+    let email = document.getElementById("email").value;
+    UserDataService.getUserbyEmail(email).then(response=>{
+      if(response.data.email != null){
+        console.log(response.data)
+        alert("Email Id already registered. Use another email id or simply login.")
+      }
+    })
+  }
   const goToLogin = (event)  => {
     event.preventDefault();
     let name = document.getElementById("firstName").value + " " + document.getElementById("lastName").value
@@ -106,11 +155,9 @@ export default function SignUp(props) {
       email : email,
       password : password
     }
-
     UserDataService.addUser(user)
     window.history.pushState({urlPath:'/'},"",'/')
     window.location.reload()
-
   }
   return (
     <Container component="main" maxWidth="xs">
@@ -129,12 +176,14 @@ export default function SignUp(props) {
                 name="firstName"
                 variant="outlined"
                 required
-                hidden={true}
                 fullWidth
+                error={values.emsgFirst?true:false}
                 id="firstName"
                 label="First Name"
                 autoFocus
-                helperText={emsgFirst}
+                helperText="Only alphabets"
+                onChange={validateFirstName}
+
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -142,11 +191,13 @@ export default function SignUp(props) {
                 variant="outlined"
                 required
                 fullWidth
+                error={values.emsgl?true:false}
                 id="lastName"
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
-                helperText={emsgl}
+                helperText="Only alphabets"
+                onChange={validateLastName}
               />
               
             </Grid>
@@ -155,12 +206,14 @@ export default function SignUp(props) {
                 variant="outlined"
                 required
                 fullWidth
-                hidden={true}
+                error={values.emsgId?true:false}
                 id="email"
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                helperText={emsgId}
+                helperText="Should be of format : example@xyz.com"
+                onChange={validateEmail}
+                onMouseOut={validateEmailBack}
               />
             </Grid>
             <Grid item xs={12}>
@@ -168,12 +221,14 @@ export default function SignUp(props) {
                 variant="outlined"
                 required
                 fullWidth
+                error={values.emsgP?true:false}
                 name="password"
                 label="Password"
                 type={values.showPassword ? 'text' : 'password'}
                 id="password"
                 autoComplete="current-password"
-                helperText={emsgP}
+                onChange={validatePassword}
+                helperText="Length should be between 6-12 characters"
                 InputProps={{
                   endAdornment:(
                     <InputAdornment position="end">
@@ -194,14 +249,15 @@ export default function SignUp(props) {
                 variant="outlined"
                 required
                 fullWidth
+                error={values.emsgCP? true: false}
                 name="confirmPassword"
                 label="Confirm Password"
                 type="password"
                 id="confirmPassword"
                 autoComplete="current-password"
-                helperText={emsgCP}
+                helperText="Should match Password"
+                onChange={validatePassword}
               />
-              <FormHelperText helperText={emsgCP}/>
             </Grid>
             <Grid item xs={12}>
               <FormControlLabel

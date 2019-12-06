@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -16,7 +16,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import remy from '../restory.jpeg'
-import { FormHelperText } from '@material-ui/core';
 import UserDataService from '../service/UserDataService';
 function Copyright() {
   return (
@@ -29,6 +28,10 @@ function Copyright() {
       {'.'}
     </Typography>
   );
+}
+function useForceUpdate(){
+  const [v, setValue] = useState(0); 
+    return () => setValue(v => ++v);
 }
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -49,6 +52,7 @@ const useStyles = makeStyles(theme => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  
 }));
 
 export default function SignIn() {
@@ -56,6 +60,8 @@ export default function SignIn() {
   const [values, setValues] = React.useState({
     password: '',
     showPassword: false,
+    emsgId : false,
+    emsgP : false
   });
   const handleClickShowPassword = () => {
     setValues({ ...values, showPassword: !values.showPassword });
@@ -63,9 +69,10 @@ export default function SignIn() {
   const handleMouseDownPassword = event => {
     event.preventDefault();
   };
+  var email;
   const setCurrentEmail = (event) => {
     event.preventDefault()
-    var email=document.getElementById("email").value;
+    email=document.getElementById("email").value;
     
     var password = document.getElementById("password").value;
     UserDataService.validateUser(email,password).then(
@@ -87,21 +94,36 @@ export default function SignIn() {
       document.getElementById("email").value=localStorage["emailId"];
     };
   };
-  let emsgId=" ";
-  let emsgP =" ";
-  const validatePassword = (values) => {
-    var pattern=new RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/);
-    if(values.password == "" )  {
-      emsgId="Password cannot be empty"
-    }  
-    if(!pattern.test(values.email)){
-      emsgP="Enter a valid email Id"
+  const update = useForceUpdate();
+  const validate = () => {
+    var password=document.getElementById("password").value
+    var email=document.getElementById("email").value
+    var pattern=/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if(!pattern.test(email)){
+      console.log("if called")
+      values.emsgId=true;
+      console.log(values.emsgId)      
+      update()
+    }
+    else{
+      values.emsgId=false;
+      console.log(values.emsgId)
+      update()
+    }
+    if(password.length <6 || password.length>12 ){
+      values.emsgP=true;
+      update()
+    }
+    else{
+      values.emsgP=false;
+      console.log(values.emsgP)
+      update()
     }
     
   };
 
   return (
-    <Container component="main" maxWidth="xs" onLoad={setEmail}>
+    <Container component="main" maxWidth="xs" onLoad={setEmail} >
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar alt="Remy Sharp" className={classes.avatar} srcSet ={remy} >
@@ -115,28 +137,30 @@ export default function SignIn() {
             margin="normal"
             required
             fullWidth
+            error={values.emsgId}
+            helperText="Should be of format : example@xyz.com"
             id="email"
             label="Email Address"
             name="email"
-            autoComplete="email"
+            InputLabelProps={{shrink:`${email?true:false}`}}
+            autoComplete={email}
+            onChange={validate}
             autoFocus
-            helperText={emsgId}
-            onChange={validatePassword}
-          />
-          <FormHelperText/>
+          />          
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
+            error={values.emsgP}
+            helperText="Length between 6-12"
             maxLength={12}
             name="password"
             label="Password"
             type={values.showPassword ? 'text' : 'password'}
             id="password"
+            onChange={validate}
             autoComplete="current-password"
-            helperText={emsgP}
-            onChange={validatePassword}
             InputProps={{
             endAdornment:(
               <InputAdornment position="end">
@@ -151,7 +175,6 @@ export default function SignIn() {
               </InputAdornment>),
             }}
           />
-          <FormHelperText/>
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
@@ -163,7 +186,6 @@ export default function SignIn() {
             color="primary"
             className={classes.submit}
             onClick={setCurrentEmail}
-            onFocus={validatePassword}
           >
             Sign In
           </Button>

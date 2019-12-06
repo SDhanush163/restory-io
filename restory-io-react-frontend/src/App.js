@@ -4,6 +4,8 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import LoginComponent from './components/LoginComponent'
 import SignUp from './components/SignUp'
 import LandingPage from './components/LandingPage'
+import CreateGroup from './components/CreateGroup';
+import Admin from './components/Admin';
 class App extends Component {
     render() {
         return (
@@ -13,6 +15,8 @@ class App extends Component {
                     <Route exact path="/" component={LoginComponent}/>
                     <Route exact path="/signUp" component={SignUp}/>
                     <Route exact path="/home" component={LandingPage}/>
+                    <Route exact path="/createGroup" component={CreateGroup}/>
+                    <Route exact path="/admin" component={Admin}/>
                     </Switch>
                 </Router>
             </div>
