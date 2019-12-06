@@ -19,7 +19,7 @@ public class PostDAOImpl implements PostDAO{
 	MongoTemplate mongoTemplate;
 
 	@Override
-	public Post getPost(int postId) {
+	public Post getPost(String postId) {
 		return mongoTemplate.findById(postId, Post.class);
 	}
 
@@ -38,7 +38,7 @@ public class PostDAOImpl implements PostDAO{
 	}
 
 	@Override
-	public boolean deletePost(int postId) {
+	public boolean deletePost(String postId) {
 		Post post=new Post();
 		post.setPostID(postId);
 		DeleteResult deleteResult = mongoTemplate.remove(post);

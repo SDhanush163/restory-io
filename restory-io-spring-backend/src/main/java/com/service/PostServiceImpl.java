@@ -13,7 +13,7 @@ public class PostServiceImpl implements PostService{
 	PostDAO postDAO;
 	
 	@Override
-	public Post getPost(int postId) {
+	public Post getPost(String postId) {
 		return postDAO.getPost(postId); 
 	}
 
@@ -29,7 +29,7 @@ public class PostServiceImpl implements PostService{
 	}
 
 	@Override
-	public boolean deletePost(int postId) {
+	public boolean deletePost(String postId) {
 		
 		return postDAO.deletePost(postId);
 	}

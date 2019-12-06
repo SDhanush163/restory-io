@@ -47,7 +47,7 @@ export default function PostCard(props) {
       <CardMedia
         className={classes.media}
         height="100"
-        image={props.imgUrl}
+        image="https://www.fujifilm.com/products/digital_cameras/x/fujifilm_x_t3/sample_images/img/index/ff_x_t3_002.JPG"//{props.imgUrl}
         title={props.altText}
       />
 
