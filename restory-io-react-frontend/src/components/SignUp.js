@@ -213,7 +213,7 @@ export default function SignUp(props) {
                 autoComplete="email"
                 helperText="Should be of format : example@xyz.com"
                 onChange={validateEmail}
-                onMouseOut={validateEmailBack}
+                onBlur={validateEmailBack}
               />
             </Grid>
             <Grid item xs={12}>
