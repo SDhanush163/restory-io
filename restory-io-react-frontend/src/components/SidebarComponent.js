@@ -18,8 +18,8 @@ function SidebarComponent() {
                         <img src={companySplash} height="90px" /></div>
                 </li>
                 <ul>
-                    <li><a href="http://localhost:3000/home"><i className="material-icons"><HomeIcon /></i>Home</a></li>
-                    <li><a href="#"><i className="material-icons"><ViewDayIcon /></i>Feeder</a></li>
+                    <li><a href="#"><i className="material-icons"><HomeIcon /></i>Home</a></li>
+                    <li><a href="http://localhost:3000/home"><i className="material-icons"><ViewDayIcon /></i>Feeds</a></li>
                     <li><a href="http://localhost:3000/home"><i className=" material-icons"><GroupIcon /></i>Subbed Groups</a></li>
                     <li><a href="http://localhost:3000/createGroup"><i className="material-icons"><GroupAddIcon /></i>New Group</a></li>
                     <li><a href="#search_group"><i className="material-icons"><SearchIcon /></i>Search Group</a></li>
