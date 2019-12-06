@@ -4,6 +4,7 @@ import Radio from '@material-ui/core/Radio';
 import Button from '@material-ui/core/Button';
 import GroupDataService from '../service/GroupDataService';
 import UserDataService from '../service/UserDataService';
+import SidebarComponent from './SidebarComponent';
 class CreateGroup extends Component {
     constructor(props){
         super(props);
@@ -46,8 +47,13 @@ class CreateGroup extends Component {
                 <AppBar>
                 <Typography component="h1" variant="h4" align="center">Group Details</Typography>
                 </AppBar>
-                <main style={{ cellSpacing : '10px', marginLeft: '150px' }}></main>
-                <form padding="10px" cellSpacing="10px">
+                <div className="row">
+                    <div className="col-6">
+                        <SidebarComponent />
+                    </div>
+                    <main style={{ cellSpacing : '10px', marginLeft: '200px' }}></main>
+                    <div className="col-10">
+                    <form padding="10px" cellSpacing="10px">
                     <TextField 
                     variant= "outlined"
                     margin="normal" required
@@ -99,6 +105,8 @@ class CreateGroup extends Component {
                        Create
                     </Button>
                 </form>
+                </div>
+                </div>
             </Container>            
         );
     }

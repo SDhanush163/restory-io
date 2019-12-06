@@ -17,32 +17,32 @@ class Admin extends Component {
         }
     }
     componentWillMount() {
-        GroupDataService.getGroupByGroupName(this.state.groupName).then(response=>
-            {
-                console.log(response.data)
-                this.setState({
-                    description:response.data.groupDescription,
-                    pendingUsers:response.data.pendingUsers,
-                    currentMembers:response.data.users,
-                    noOfPosts:response.data.posts.length,
+        // GroupDataService.getGroupByGroupName(this.state.groupName).then(response=>
+        //     {
+        //         console.log(response.data)
+        //         this.setState({
+        //             description:response.data.groupDescription,
+        //             pendingUsers:response.data.pendingUsers,
+        //             currentMembers:response.data.users,
+        //             noOfPosts:response.data.posts.length,
                     
-                })
-            })
-        if(this.state.pendingUsers!=null){
-        var noOfPendingUser=this.state.pendingUsers.length;
-        var user=this.state.pendingUsers
-        let app=[]
-        while(noOfPendingUser>-1){
-            UserDataService.getUserbyEmail(user[noOfPendingUser-1]).then(response=>{
-                console.log(response.data.name);
-                app.append(response.data.name)
-            }
-            )
-        }
-        this.setState({
-            appDeny:app
-        })
-    }
+        //         })
+        //     })
+        // if(this.state.pendingUsers!=null){
+        // var noOfPendingUser=this.state.pendingUsers.length;
+        // var user=this.state.pendingUsers
+        // let app=[]
+        // while(noOfPendingUser>-1){
+        //     UserDataService.getUserbyEmail(user[noOfPendingUser-1]).then(response=>{
+        //         console.log(response.data.name);
+        //         app.append(response.data.name)
+        //     }
+        //     )
+        // }
+        // this.setState({
+        //     appDeny:app
+        // })
+    // }
     }
     render() {
         var count=0;

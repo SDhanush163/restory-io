@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import GroupDataService from '../service/GroupDataService';
-import { AppBar, InputAdornment, Typography, Input, TextField } from '@material-ui/core';
+import { AppBar, InputAdornment, Typography, Input, TextField,Card, CardContent } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 class SearchGroup extends Component {
     constructor(props) {
@@ -34,7 +34,7 @@ class SearchGroup extends Component {
                     </AppBar>
                     <div className="row-cols-5">
                     <div style={{background:"offwhite", zIndex:1}} >
-                            {this.state.groupName.maps(response,index =>
+                            {this.state.groupName.maps((response,index) =>
                             <Card>
                             <CardContent>
                                 <Typography>
