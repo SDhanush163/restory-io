@@ -63,7 +63,7 @@ public class GroupDAOImpl implements GroupDAO {
 		query.addCriteria(Criteria.where("groupName").is(groupName));
 		
 		List<Group> find = mongotemplate.find(query, Group.class);
-		if(find.size() == 0)
+		if(find.size() != 0)
 			return true;
 		else
 			return false;
