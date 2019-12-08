@@ -7,6 +7,8 @@ import LandingPage from './components/LandingPage'
 import CreateGroup from './components/CreateGroup';
 import Admin from './components/Admin';
 import SearchGroup from './components/SearchGroup'
+import SubbedGroup from './components/SubbedGroup'
+
 class App extends Component {
     render() {
         return (
@@ -19,6 +21,7 @@ class App extends Component {
                     <Route exact path="/createGroup" component={CreateGroup}/>
                     <Route exact path="/admin" component={Admin}/>
                     <Route exact path="/searchGroup" component={SearchGroup}/>
+                    <Route exact path="/subbedGroup" component={SubbedGroup}/>
                     </Switch>
                 </Router>
             </div>

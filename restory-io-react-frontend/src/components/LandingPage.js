@@ -23,6 +23,7 @@ class LandingPage extends Component {
         let emailID = localStorage.getItem('emailId')
         this.state = { 
             groupID : '',
+            selectedGroup : '',
             fileName : 'Choose a file ...',
             email : emailID,
             user : '',
@@ -54,38 +55,64 @@ class LandingPage extends Component {
                 this.setState({
                     user : response.data,
                     status : response.status
-                })
+                })  
                 this.renderPosts()
                 }
             )
     }
 
     renderPosts = () => {
+        if(this.state.user.groups != null) {
         for(const [i, val] of this.state.user.groups.entries()) {
             GroupDataService.getGroupByGroupID(val).then(res => {
+                console.log("Group retrieved") 
                 let groups = res.data
                 this.setState({groupsRender : [...this.state.groupsRender, res.data]})
-                for(const [i, val] of this.state.groupsRender.entries()) {
-                    for(const [j, val] of val.posts.entries()) {
-                        PostDataService.getPost(val).then(res => {
-                            let postsToBeRendered = res.data 
-                            
+                if(groups.posts != null) {
+                for(const [i, val] of groups.posts.entries()) {
+                    PostDataService.getPost(val).then(res => {
+                        let postsToBeRendered = res.data 
+                        UserDataService.getUserbyUsername(postsToBeRendered.author).then(res => {
+                            let author = res.data
                             let postBeingRendered = {
-                                user : this.state.user.name,
+                                user : author.name,
                                 group : groups.groupName,
-                                text : postsToBeRendered.textBody
+                                text : postsToBeRendered.textBody,
+                                timeStamp : postsToBeRendered.timeStamp
                             }
                             this.setState({
                                 postsRender : [...this.state.postsRender, res.data],
                                 cardsRender : [...this.state.cardsRender, postBeingRendered]
                             })
-                            
                         })
-                    }
-                }
-            })
+                    })
+                }}
+                // for(const [i, val] of this.state.groupsRender.entries()) {
+                //     console.log(val)
+                //     if(val.posts !== null) {
+                //     for(const [j, val] of val.posts.entries()) {
+                //         console.log(val)
+                //         PostDataService.getPost(val).then(res => {
+                //             let postsToBeRendered = res.data 
+                            
+                //             let postBeingRendered = {
+                //                 user : this.state.user.name,
+                //                 group : groups.groupName,
+                //                 text : postsToBeRendered.textBody,
+                //                 timeStamp : postsToBeRendered.timeStamp
+                //             }
+                //             this.setState({
+                //                 postsRender : [...this.state.postsRender, res.data],
+                //                 cardsRender : [...this.state.cardsRender, postBeingRendered]
+                //             })
+                //         })
+                //     }}
+                // }
+            })        
         }
     }
+    }
+
 
     handleUpload = e => {
         let { image } = this.state;
@@ -96,7 +123,7 @@ class LandingPage extends Component {
          });
          
          console.log(image)
-          const uploadTask = storage.ref(`images/${image.name}`).put(image);
+        const uploadTask = storage.ref(`images/${image.name}`).put(image);
           uploadTask.on(
             "state_changed",
             error => {
@@ -113,6 +140,7 @@ class LandingPage extends Component {
                 });
                 
             });
+          
         }
 
     handlePostSubmit = (e) => {
@@ -135,8 +163,11 @@ class LandingPage extends Component {
         console.log(post)
         GroupDataService.getGroupByGroupID(post.groupID).then(res => {
             let group = res.data
-            
-            group.posts.push(id)
+            if(group.posts == undefined){
+                group.posts = [id]
+            }
+            else {
+                group.posts = [...group.posts, id]}
             GroupDataService.updateGroup(group)
         })
 
@@ -155,8 +186,12 @@ class LandingPage extends Component {
 
     handleGroupChange = e => {
         console.log(e.target.value)
-        this.setState({
-            groupID : e.target.value
+        GroupDataService.getGroupByGroupID(e.target.value).then(res => {
+            let group = res.data
+            this.setState({
+                groupID : group.groupID,
+                selectedGroup : group.groupName
+            })
         })
     }
 
@@ -219,14 +254,14 @@ class LandingPage extends Component {
                                             <input onChange={this.handleUpload} id="uploadFile" type="file" style={{display : "none"}}/>  
                                         </Button>
                                         <label style={{marginLeft : 10}}>{fileName}</label>
-                                       
                                         <Button style={{float : "right"}} color="primary" variant="outlined" type="submit"><SendIcon/></Button>
                                         </form>
                                     </CardContent>
                                 </Card>
                             </div><br/>
-                            {this.state.cardsRender.map((val, i) => (
-                                <div><PostCard username={val.user} groupname={val.group} textBody={val.text} imgUrl={this.state.url} /><br/> </div>
+                            {/* {console.log(this.state.cardsRender)} */}
+                            {this.state.cardsRender.reverse().map((val, i) => (
+                                <div key={i}><PostCard username={val.user} groupname={val.group} textBody={val.text} imgUrl={this.state.url} /><br/> </div>
                             ))}
                         </div>
                         <div className="col-1"></div>

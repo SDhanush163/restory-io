@@ -68,4 +68,13 @@ public class GroupController {
 		else
 			return new ResponseEntity<List<Group>>(list, HttpStatus.OK);
 	}
+	
+	@GetMapping
+	public ResponseEntity<List<Group>> getAllGroups() {
+		List<Group> list = groupService.getAllGroups();
+		if(list.size() == 0)
+			return new ResponseEntity<List<Group>>(HttpStatus.NOT_FOUND);
+		else
+			return new ResponseEntity<List<Group>>(list, HttpStatus.OK);
+	}
 }

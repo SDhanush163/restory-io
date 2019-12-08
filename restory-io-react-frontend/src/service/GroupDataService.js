@@ -20,6 +20,10 @@ class GroupDataService {
         return axios.get(`${GROUP_API_URL}/name/${groupName}`)
     }
 
+    getAllGroups() {
+        return axios.get(`${GROUP_API_URL}`)
+    }
+
 }
  
 export default new GroupDataService();

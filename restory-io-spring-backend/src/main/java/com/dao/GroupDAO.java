@@ -9,5 +9,6 @@ public interface GroupDAO {
 	public boolean updateGroup(Group group);
 	public Group getGroupByGroupID(String groupID);
 	public List<Group> getGroupsByGroupname(String groupName);
+	public List<Group> getAllGroups();
 	public boolean isGroupExist(String groupName);
 }

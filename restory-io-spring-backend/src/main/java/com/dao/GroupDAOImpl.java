@@ -69,4 +69,10 @@ public class GroupDAOImpl implements GroupDAO {
 			return false;
 	}
 
+	@Override
+	public List<Group> getAllGroups() {
+		List<Group> groups = mongotemplate.findAll(Group.class);
+		return groups;
+	}
+
 }

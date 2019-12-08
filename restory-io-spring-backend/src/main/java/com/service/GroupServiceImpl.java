@@ -39,4 +39,9 @@ public class GroupServiceImpl implements GroupService {
 		return groupDAO.isGroupExist(groupName);
 	}
 
+	@Override
+	public List<Group> getAllGroups() {
+		return groupDAO.getAllGroups();
+	}
+
 }

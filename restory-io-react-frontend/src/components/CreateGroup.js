@@ -9,6 +9,7 @@ class CreateGroup extends Component {
     constructor(props){
         super(props);
         this.state={
+            user : '',
             admin : ''
         }
         this.submit= this.submit.bind(this)
@@ -18,35 +19,55 @@ class CreateGroup extends Component {
         UserDataService.getUserbyEmail(email).then(response =>{
             console.log(response.data)
             this.setState({
+                user : response.data,
                 admin:response.data.name
             })
             console.log("name"+this.state.admin)
         })
     }
+
+    s4 = () => {
+        return Math.floor((1 + Math.random()) * 0x10000)
+          .toString(16)
+          .substring(1);
+      }
+
+    guid = () => {
+        let {s4} = this
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+          s4() + '-' + s4() + s4() + s4();
+      }
+
     submit(e){
-        
+        var groupID = this.guid()
         var gname=document.getElementById("groupName").value
         var des=document.getElementById("description").value
         var p=document.getElementsByName("privacy")[0].value//this.refs.privacy.value//document.getElementsByName("privacy").value
         var group={
+            groupID : groupID,
             groupName:gname,
             groupDescription:des,
             privacy:p,
-            admin:this.state.admin
+            admin:this.state.admin,
+            users: [this.state.admin]
         }
+        let user = this.state.user
+        user.groups = [...this.state.user.groups, groupID]
+
         GroupDataService.addGroup(group).then(response=>{
             window.history.pushState({urlPath:'/home'},"",'/home')
             window.location.reload()
         })
+        UserDataService.updateUser(user)
         e.preventDefault()
     }
     render() {
         return (
             <Container component="main"maxWidth="xs" >
                 <main style={{ marginTop: '100px', marginLeft: '150px' }}></main>
-                <AppBar>
-                <Typography component="h1" variant="h4" align="center">Group Details</Typography>
-                </AppBar>
+                {/* <AppBar> */}
+                
+                {/* </AppBar> */}
                 <div className="row">
                     <div className="col-6">
                         <SidebarComponent />
@@ -54,6 +75,7 @@ class CreateGroup extends Component {
                     <main style={{ cellSpacing : '10px', marginLeft: '200px' }}></main>
                     <div className="col-10">
                     <form padding="10px" cellSpacing="10px">
+                    <Typography component="h1" variant="h4" align="center">Group Details</Typography>
                     <TextField 
                     variant= "outlined"
                     margin="normal" required
