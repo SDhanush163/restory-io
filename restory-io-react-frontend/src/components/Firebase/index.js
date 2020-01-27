@@ -2,12 +2,12 @@ import firebase from "firebase/app";
 import "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBFYOaRisBsvHxen4GTYVaE1gmgFaftHew",
-  authDomain: "restiryio.firebaseapp.com",
-  databaseURL: "https://restoryio.firebaseio.com/",
-  projectId: "restoryio",
-  storageBucket: "gs://restoryio.appspot.com",
-  messagingSenderId: "791913334582",
+  apiKey: "*******************",
+  authDomain: "*******************",
+  databaseURL: "*******************",
+  projectId: "*******************",
+  storageBucket: "*******************",
+  messagingSenderId: "*******************",
 };
 
 
